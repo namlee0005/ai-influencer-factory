@@ -1,0 +1,71 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": { "ckpt_name": "{{ base_model }}" }
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "{{ trigger_words }} professional studio portrait, clean background, controlled lighting, {{ positive_prompt }}",
+      "clip": ["1", 1]
+    }
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "{{ negative_prompt }}",
+      "clip": ["1", 1]
+    }
+  },
+  {% if use_lora %}
+  "4": {
+    "class_type": "LoraLoader",
+    "inputs": {
+      "lora_name": "{{ lora_path }}",
+      "strength_model": {{ lora_weight }},
+      "strength_clip": {{ lora_weight }},
+      "model": ["1", 0],
+      "clip": ["1", 1]
+    }
+  },
+  {% endif %}
+  {% if use_ip_adapter %}
+  "5": {
+    "class_type": "IPAdapterApply",
+    "inputs": {
+      "ipadapter": "ip-adapter-plus_sdxl_vit-h.safetensors",
+      "image": "{{ ip_adapter_ref }}",
+      "weight": 0.80,
+      "noise": 0.02,
+      "model": ["{% if use_lora %}4{% else %}1{% endif %}", 0]
+    }
+  },
+  {% endif %}
+  "6": {
+    "class_type": "EmptyLatentImage",
+    "inputs": { "width": {{ width }}, "height": {{ height }}, "batch_size": 1 }
+  },
+  "7": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["{% if use_ip_adapter %}5{% elif use_lora %}4{% else %}1{% endif %}", 0],
+      "positive": ["2", 0],
+      "negative": ["3", 0],
+      "latent_image": ["6", 0],
+      "seed": {{ seed }},
+      "steps": {{ steps }},
+      "cfg": {{ cfg }},
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0
+    }
+  },
+  "8": {
+    "class_type": "VAEDecode",
+    "inputs": { "samples": ["7", 0], "vae": ["1", 2] }
+  },
+  "9": {
+    "class_type": "SaveImage",
+    "inputs": { "images": ["8", 0], "filename_prefix": "studio" }
+  }
+}
