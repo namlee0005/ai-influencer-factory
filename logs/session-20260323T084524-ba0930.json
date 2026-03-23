@@ -1,0 +1,39 @@
+{
+  "session_id": "20260323T084524-ba0930",
+  "start_time": "2026-03-23T08:45:24.773448Z",
+  "entries": [
+    {
+      "timestamp": "2026-03-23T08:48:25.837721Z",
+      "agent": "Planner",
+      "agent_key": "Planner",
+      "backend": "claude",
+      "model": "claude-sonnet-4-6",
+      "round": "task:write_spec_file",
+      "status": "validation_failed",
+      "duration_s": 181.063,
+      "retry_count": 3,
+      "skills_injected": false,
+      "is_resumed": false,
+      "input_tokens": null,
+      "output_tokens": null,
+      "error": "Response is empty."
+    },
+    {
+      "timestamp": "2026-03-23T08:49:31.820725Z",
+      "agent": "Planner",
+      "agent_key": "Planner",
+      "backend": "claude",
+      "model": "claude-sonnet-4-6",
+      "round": "task:write_tasks_file",
+      "status": "validation_failed",
+      "duration_s": 65.983,
+      "retry_count": 3,
+      "skills_injected": false,
+      "is_resumed": false,
+      "input_tokens": null,
+      "output_tokens": null,
+      "error": "Response is empty."
+    }
+  ],
+  "end_time": "2026-03-23T08:49:31.820854Z"
+}
